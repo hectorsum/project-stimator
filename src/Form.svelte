@@ -1,12 +1,19 @@
 <script>
-  export let id=12;
+  import materialStore from '../material-store'
+  export let id;
   export let name = "";
   export let price;
-  $: mode = id ? "Edit" : "Add";
+  $: mode = id ? "edit" : "add";
   $: canSubmit = price >= 0 && name !== "";
   function submit(){
     if(!canSubmit){
       return;
+    }
+    if (mode == 'add'){
+      materialStore.add(name,price);
+    }
+    if (mode == 'edit'){
+      materialStore.edit(id,name,price);
     }
     price = "";
     name = "";
@@ -34,7 +41,7 @@
     <input bind:value={price} type="number" min="0" id="price" placeholder="Price" step="any">
   </fieldset>
   <button type="submit" class="float-right" disabled={!canSubmit}>{mode}</button>
-  {#if mode === 'Edit'}
+  {#if mode === 'edit'}
     <button on:click={cancel} type="button" class="float-right">Cancel</button>
   {/if}
 </form>
